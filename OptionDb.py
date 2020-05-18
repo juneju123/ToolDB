@@ -7,11 +7,14 @@
 @Project:   OptionToolDb
 """
 import pymysql
+from FileHelpers import read_string_from_file
+
 
 
 class OptionDb:
     def __init__(self, db_name):
-        self.conn = pymysql.connect('localhost', 'root', 'Love4ever', db_name)
+        db_key = read_string_from_file("db_key")
+        self.conn = pymysql.connect('localhost', 'root', db_key, db_name)
 
     def create_option_table(self, table_name, columns):
         with self.conn.cursor() as cursor:

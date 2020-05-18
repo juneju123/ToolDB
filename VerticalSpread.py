@@ -57,9 +57,9 @@ class VerticalSpread:
 
     def get_max_loss(self):
         if self.credit_debit == "DEBIT":
-            return -self.get_premium()
+            return -self.get_premium() if self.get_premium() != 0 else 0.01
         elif self.credit_debit == "CREDIT":
-            return self.get_premium() - self.get_strike_wide()
+            return self.get_premium() - self.get_strike_wide() if self.get_premium() != self.get_strike_wide() else 0.01
 
     def get_max_profit(self):
         if self.credit_debit == "DEBIT":
