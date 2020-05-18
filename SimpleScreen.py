@@ -16,9 +16,9 @@ def simple_screen(option_chains, conditions, min_days_to_expiration, max_days_to
     :param conditions:
     :type option_chains: OptionChain.OptionChain
     """
-    min_volume = kwargs.get('min_volume', 10)
-    min_open_interest = kwargs.get('min_open_interest', 10)
-    max_bid_ask_spread = kwargs.get('max_bid_ask_spread', 0.2)
+    min_volume = kwargs.get('min_volume', 20)
+    min_open_interest = kwargs.get('min_open_interest', 20)
+    max_bid_ask_spread = kwargs.get('max_bid_ask_spread', 0.15)
     iv_vs_hv = kwargs.get('iv_vs_hv', 1.1)
     max_delta = kwargs.get('max_delta', 0.4)
     for date in option_chains.get_all_dates():
