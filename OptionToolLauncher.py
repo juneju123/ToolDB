@@ -39,38 +39,37 @@ def option_tool_launcher(symbol_list, conditions, is_live, max_loss, min_profit,
     my_logger.info('Start screen options...')
 
     if spread_strategy == 'bullish':
-        ScreenLauncher.simple_screen_launcher(all_put_chains, conditions, min_days_to_expiration, max_days_to_expiration)
+        ScreenLauncher.simple_screen_launcher(symbol_list, all_put_chains, conditions, min_days_to_expiration,
+                                              max_days_to_expiration)
         bullish_put = ScreenLauncher.vertical_screen_launcher(symbol_list, all_put_chains, conditions, 'CREDIT', 'PUT',
-                                                     'bullish_put', max_loss,
+                                                              'bullish_put', max_loss,
                                                               min_profit, min_expectation, prob_of_max_profit,
-                                                              max_strikes_wide, min_days_to_expiration,
-                                                              max_days_to_expiration)
+                                                              max_strikes_wide)
         results_files_list = [bullish_put]
     elif spread_strategy == 'bearish':
-        ScreenLauncher.simple_screen_launcher(all_call_chains, conditions, min_days_to_expiration,
+        ScreenLauncher.simple_screen_launcher(symbol_list, all_call_chains, conditions, min_days_to_expiration,
                                               max_days_to_expiration)
-        bearish_call = ScreenLauncher.vertical_screen_launcher(symbol_list, all_call_chains, conditions, 'CREDIT', 'CALL',
-                                                      'bearish_call', max_loss,
+        bearish_call = ScreenLauncher.vertical_screen_launcher(symbol_list, all_call_chains, conditions, 'CREDIT',
+                                                               'CALL',
+                                                               'bearish_call', max_loss,
                                                                min_profit, min_expectation, prob_of_max_profit,
-                                                               max_strikes_wide, min_days_to_expiration,
-                                                               max_days_to_expiration)
+                                                               max_strikes_wide)
         results_files_list = [bearish_call]
     elif spread_strategy == 'all':
-        ScreenLauncher.simple_screen_launcher(all_put_chains, conditions, min_days_to_expiration,
+        ScreenLauncher.simple_screen_launcher(symbol_list, all_put_chains, conditions, min_days_to_expiration,
                                               max_days_to_expiration)
-        ScreenLauncher.simple_screen_launcher(all_call_chains, conditions, min_days_to_expiration,
+        ScreenLauncher.simple_screen_launcher(symbol_list, all_call_chains, conditions, min_days_to_expiration,
                                               max_days_to_expiration)
         bullish_put = ScreenLauncher.vertical_screen_launcher(symbol_list, all_put_chains, conditions, 'CREDIT', 'PUT',
-                                                     'bullish_put', max_loss,
+                                                              'bullish_put', max_loss,
                                                               min_profit, min_expectation, prob_of_max_profit,
-                                                              max_strikes_wide, min_days_to_expiration,
-                                                              max_days_to_expiration)
-        bearish_call = ScreenLauncher.vertical_screen_launcher(symbol_list, all_call_chains, conditions, 'CREDIT', 'CALL',
-                                                      'bearish_call',
+                                                              max_strikes_wide)
+        bearish_call = ScreenLauncher.vertical_screen_launcher(symbol_list, all_call_chains, conditions, 'CREDIT',
+                                                               'CALL',
+                                                               'bearish_call',
                                                                max_loss,
                                                                min_profit, min_expectation, prob_of_max_profit,
-                                                               max_strikes_wide, min_days_to_expiration,
-                                                               max_days_to_expiration)
+                                                               max_strikes_wide)
         results_files_list = [bullish_put, bearish_call]
 
     return results_files_list

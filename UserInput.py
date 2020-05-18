@@ -50,7 +50,21 @@ def user_input():
                 OC6 = 'low_theo'    # bid > theo
 
                     ''')
+        option_conditions_dec = []
         option_conditions = option_conditions.split(',')
+        for condition in option_conditions:
+            if condition == 'OC1':
+                option_conditions_dec.append('high_volume')
+            elif condition == 'OC2':
+                option_conditions_dec.append('narrow_bid_ask')
+            elif condition == 'OC3':
+                option_conditions_dec.append('OTM')
+            elif condition == 'OC4':
+                option_conditions_dec.append('high_iv')
+            elif condition == 'OC5':
+                option_conditions_dec.append('low_delta')
+            elif condition == 'OC6':
+                option_conditions_dec.append('low_theo')
 
     is_live = input('Do you want to use live data or not?[No]') == 'Yes'
 
@@ -63,7 +77,7 @@ def user_input():
     max_days_to_expiration = input('Maximum days to expiration[50]: ') or 50
 
     spread_strategy = input('Please choose your spread strategy(bullish, bearish, all)[all]: ') or 'all'
-    return symbol_list, option_conditions, is_live, float(max_loss), float(min_profit), \
+    return symbol_list, option_conditions_dec, is_live, float(max_loss), float(min_profit), \
            float(min_expectation), float(prob_of_max_profit), int(max_strikes_wide), \
            int(min_days_to_expiration), int(max_days_to_expiration), spread_strategy
 
