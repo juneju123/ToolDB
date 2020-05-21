@@ -50,8 +50,8 @@ def user_input():
                 OC6 = 'low_theo'    # bid > theo
 
                     ''')
+        option_conditions = option_conditions.split(',')
     option_conditions_dec = []
-    option_conditions = option_conditions.split(',')
     for condition in option_conditions:
         if condition == 'OC1':
             option_conditions_dec.append('high_volume')
