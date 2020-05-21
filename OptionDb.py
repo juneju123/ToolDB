@@ -8,13 +8,15 @@
 """
 import pymysql
 from FileHelpers import read_string_from_file
-
+#import mysql.connector
 
 
 class OptionDb:
     def __init__(self, db_name):
         db_key = read_string_from_file("db_key")
-        self.conn = pymysql.connect('localhost', 'root', db_key, db_name)
+        print(db_key)
+        # self.conn = mysql.connector.connect(user='juneju123', password='V1988126@Emysql', host='127.0.0.1', database=db_name)
+        self.conn = pymysql.connect('localhost', 'juneju123', db_key, db_name)
 
     def create_option_table(self, table_name, columns):
         with self.conn.cursor() as cursor:
