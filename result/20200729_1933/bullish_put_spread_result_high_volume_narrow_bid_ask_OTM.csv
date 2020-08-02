@@ -1,0 +1,3 @@
+,underlying symbol,underlying price,description,max profit,max loss,max profit prob,max loss prob,spread premium,spread theo premium,expectation,leg1 symbol,leg2 symbol,leg1 theo,leg2 theo,leg1 delta,leg2 delta,leg1 volume,leg2 volume,leg1 inTheMoney,leg2 inTheMoney
+0,AMD,76.315,Buy AMD_090420P61; Sell AMD_090420P65,0.555,-3.445,0.825048,0.103146,0.555,0.555,0.016082760112600077,AMD_090420P61,AMD_090420P65,0.62,1.175,-0.09,-0.156,25,218,0,0
+1,AMD,76.315,Buy AMD_090420P67; Sell AMD_090420P69,0.5750000000000002,-1.4249999999999998,0.725318,0.21827,0.5750000000000002,0.575,0.06594361310586379,AMD_090420P67,AMD_090420P69,1.535,2.11,-0.197,-0.249,40,33,0,0
