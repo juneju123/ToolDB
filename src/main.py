@@ -11,7 +11,7 @@ from datetime import datetime
 
 from src.helpers import file_helpers, log_config
 from src.pre_and_post import global_vars, user_input
-from src.core import option_tool_launcher
+from src.core import option_tool
 import logging
 from src.pre_and_post.send_notification import send_notification
 
@@ -40,10 +40,10 @@ if __name__ == '__main__':
     try:
         symbol_list, option_conditions, is_live, max_loss, min_profit, min_expectation, prob_of_max_profit, \
         max_strikes_wide, min_days_to_expiration, max_days_to_expiration, spread_strategy = user_input.user_input()
-        result_files_list = option_tool_launcher.execution(symbol_list, option_conditions, is_live, max_loss,
-                                                           min_profit, min_expectation, prob_of_max_profit,
-                                                           max_strikes_wide, min_days_to_expiration,
-                                                           max_days_to_expiration, spread_strategy)
+        result_files_list = option_tool.execution(symbol_list, option_conditions, is_live, max_loss,
+                                                  min_profit, min_expectation, prob_of_max_profit,
+                                                  max_strikes_wide, min_days_to_expiration,
+                                                  max_days_to_expiration, spread_strategy)
         email_msg = "Test starts at: " + str(start_time) + "\nTest ends at: " + str(datetime.today().strftime(
             '%Y%m%d_%H%M')) + "\nResult folder: " + global_vars.RESULT_FOLDER + '\n' + "Raw data folder: " + \
                     global_vars.RAW_DATA_FOLDER + '\n' + 'Conditions: ' + str(option_conditions)
