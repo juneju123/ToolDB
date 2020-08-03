@@ -7,16 +7,15 @@
 @Project:   OptionToolDb
 """
 
-
 import logging
+import os
 import time
 from datetime import datetime, timedelta
-import os
+
 import pandas as pd
 import requests
 
 from src.helpers.file_helpers import read_string_from_file
-
 
 current_path = os.getcwd()
 API_KEY = read_string_from_file('src/private_info/API_KEY')
@@ -111,5 +110,3 @@ class RequestError(Exception):
 
     def __str__(self):
         print("Request failed on " + self.symbol)
-
-

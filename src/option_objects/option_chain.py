@@ -24,4 +24,3 @@ class OptionChain:
 
     def get_all_dates(self):
         return list(self.date_chain_dict.keys())
-

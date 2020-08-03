@@ -7,6 +7,7 @@
 @Project:   OptionToolDb
 """
 import pymysql
+
 from src.helpers.file_helpers import read_string_from_file
 
 

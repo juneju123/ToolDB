@@ -6,8 +6,8 @@
 @File:      SingleOption
 @Project:   OptionToolDb
 """
-from scipy.stats import norm
 import numpy as np
+from scipy.stats import norm
 
 
 class SingleOption:
@@ -34,7 +34,7 @@ class SingleOption:
         return self.strikePrice
 
     def get_mid_price(self):
-        return (self.ask + self.bid)/2
+        return (self.ask + self.bid) / 2
 
     def update_prob_itm(self):
         days_to_expiration = self.daysToExpiration

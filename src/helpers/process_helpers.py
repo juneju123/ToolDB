@@ -7,6 +7,7 @@
 @Project:   OptionToolDb
 """
 from datetime import datetime
+
 from src.process import study
 
 
@@ -22,4 +23,3 @@ def clean_option_dict(option, underlying_price, underlying_symbol):
                                            option['daysToExpiration'], option['putCall'])
 
     return option
-

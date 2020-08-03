@@ -6,13 +6,13 @@
 @File:      Main
 @Project:   OptionToolDb
 """
+import logging
 import traceback
 from datetime import datetime
 
-from src.helpers import file_helpers, log_config
-from src.pre_and_post import global_vars, user_input
 from src.core import option_tool
-import logging
+from src.helpers import file_helpers, log_config
+from src.pre_and_post import global_vars
 from src.pre_and_post.send_notification import send_notification
 
 if __name__ == '__main__':
@@ -38,15 +38,13 @@ if __name__ == '__main__':
     start_time = global_vars.ROUND_NAME
     is_live = False
     try:
-        symbol_list, option_conditions, is_live, max_loss, min_profit, min_expectation, prob_of_max_profit, \
-        max_strikes_wide, min_days_to_expiration, max_days_to_expiration, spread_strategy = user_input.user_input()
-        result_files_list = option_tool.execution(symbol_list, option_conditions, is_live, max_loss,
-                                                  min_profit, min_expectation, prob_of_max_profit,
-                                                  max_strikes_wide, min_days_to_expiration,
-                                                  max_days_to_expiration, spread_strategy)
+        handler = option_tool.OptionTool()
+        handler.pre_execution()
+
+        result_files_list = handler.execution()
         email_msg = "Test starts at: " + str(start_time) + "\nTest ends at: " + str(datetime.today().strftime(
             '%Y%m%d_%H%M')) + "\nResult folder: " + global_vars.RESULT_FOLDER + '\n' + "Raw data folder: " + \
-                    global_vars.RAW_DATA_FOLDER + '\n' + 'Conditions: ' + str(option_conditions)
+                    global_vars.RAW_DATA_FOLDER + '\n'
         email_subject = global_vars.ROUND_NAME + "; is_live_data: " + str(is_live) + '; Option Screen Finished'
 
     except Exception as e:
