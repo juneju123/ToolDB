@@ -8,12 +8,12 @@
 """
 import pymysql
 
-from src.helpers.file_helpers import read_string_from_file
+from src.helpers.file_helpers import FileHelpers
 
 
 class OptionDbHelpers:
     def __init__(self, db_name):
-        db_key = read_string_from_file("src/private_info/db_key")
+        db_key = FileHelpers.read_string_from_file("src/private_info/db_key")
         self.conn = pymysql.connect('localhost', 'root', db_key, db_name)
 
     def create_option_table(self, table_name, columns):

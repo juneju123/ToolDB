@@ -12,7 +12,7 @@ import pymysql
 from tqdm import tqdm
 
 from src.helpers import process_helpers
-from src.option_objects import option_chain, DateChain, single_option_obj
+from src.option_objects import option_chain, date_chain_obj, single_option_obj
 from src.process import tda_api_request
 
 
@@ -85,7 +85,7 @@ class DataRequest:
                 expiration = single_option.get_expiration_date()
                 strike = single_option.get_strike()
                 if not all_symbols_chains[symbol].has_date_chain(expiration):
-                    date_chain = DateChain.DateChain()
+                    date_chain = date_chain_obj.DateChain()
                     date_chain.append_single_option(strike, single_option)
                     all_symbols_chains[symbol].append_date_chain(expiration, date_chain)
                 else:

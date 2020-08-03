@@ -12,7 +12,6 @@ import pandas as pd
 from tqdm import tqdm
 
 from src.helpers import file_helpers
-from src.option_objects import DateChain
 from src.option_objects.vertical_spread import VerticalSpread
 from src.pre_and_post import global_vars
 
@@ -48,7 +47,7 @@ class SimpleScreener:
         for symbol in tqdm(self.symbol_list):
             option_chains = self.option_chains[symbol]
             for date in option_chains.get_all_dates():
-                date_chain: DateChain.DateChain = option_chains.get_date_chain(date)
+                date_chain: date_chain.DateChain = option_chains.get_date_chain(date)
                 delete_strikes = []
                 for single_option in date_chain.single_option_dict.values():
                     if single_option.daysToExpiration > self.max_days_to_expiration or single_option.daysToExpiration < self.min_days_to_expiration:
@@ -103,7 +102,7 @@ class SpreadScreener:
                 # Add filtered spreads to result list
                 spread_result = spread_result.append(spread, ignore_index=True)
         # Generate output csv file
-        output_file = file_helpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
+        output_file = file_helpers.FileHelpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
                                                       self.conditions)
         my_logger.info('Option screen completed. Start writing results to csv files...')
         return output_file

@@ -18,7 +18,7 @@ from src.process import screen_launcher
 class OptionTool:
     def __init__(self):
         self.symbol_list = []
-        self.exclude_symbols = file_helpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
+        self.exclude_symbols = file_helpers.FileHelpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
         self.start_time = global_vars.ROUND_NAME
         self.is_live = False
         self.conditions = []
@@ -47,9 +47,9 @@ class OptionTool:
                 ''')
 
         if choice == '1':
-            self.symbol_list = file_helpers.read_symbol_list('symbol_list/Optionable.xlsx')
+            self.symbol_list = file_helpers.FileHelpers.read_symbol_list('symbol_list/Optionable.xlsx')
         elif choice == '2':
-            self.symbol_list = file_helpers.read_symbol_list('symbol_list/High_IV.xlsx')
+            self.symbol_list = file_helpers.FileHelpers.read_symbol_list('symbol_list/High_IV.xlsx')
         elif choice == '3':
             self.symbol_list = input(
                 "Please provide your symbol list file name. File should be saved in symbol_list directory.")

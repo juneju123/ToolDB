@@ -43,10 +43,10 @@ def cal_prob_itm(strike, underlying_price, volatility, days_to_expiration, put_c
 def search_near_strike_volatility(underlying_symbol, price, date, put_call):
     """
 
+    :param underlying_symbol:
     :param date:
     :param put_call: 'PUT' or 'CALL'
     :param price: Given price
-    :type option_chain: option_chain
     """
 
     if put_call == 'PUT':

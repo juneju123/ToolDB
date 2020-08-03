@@ -4,13 +4,13 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from src.helpers.file_helpers import read_string_from_file
+from src.helpers.file_helpers import FileHelpers
 
 
 def send_notification(subject, message, attachment_list):
-    sender = read_string_from_file("src/private_info/sender_email")
-    receiver = read_string_from_file("src/private_info/receiver_email")
-    passwd = read_string_from_file("src/private_info/email_password")
+    sender = FileHelpers.read_string_from_file("src/private_info/sender_email")
+    receiver = FileHelpers.read_string_from_file("src/private_info/receiver_email")
+    passwd = FileHelpers.read_string_from_file("src/private_info/email_password")
     # instance of MIMEMultipart
     msg = MIMEMultipart()
     # storing the senders email address

@@ -47,14 +47,7 @@ class VerticalSpread:
     def get_theo_premium(self):
         return self.leg2.theoreticalOptionValue - self.leg1.theoreticalOptionValue if self.put_call == 'PUT' \
             else self.leg1.theoreticalOptionValue - self.leg2.theoreticalOptionValue
-        # if self.credit_debit == "CREDIT":
-        #     credit = self.leg2.theoreticalOptionValue - self.leg1.theoreticalOptionValue if self.put_call == 'PUT' \
-        #         else self.leg1.theoreticalOptionValue - self.leg2.theoreticalOptionValue
-        #     return credit
-        # elif self.credit_debit == "DEBIT":
-        #     debit = self.leg2.theoreticalOptionValue - self.leg1.theoreticalOptionValue if self.put_call == 'PUT' \
-        #         else self.leg1.theoreticalOptionValue - self.leg2.theoreticalOptionValue
-        #     return debit
+
 
     def get_max_loss(self):
         if self.credit_debit == "DEBIT":
@@ -118,8 +111,6 @@ class VerticalSpread:
         return abs(self.leg1.strikePrice - self.leg2.strikePrice)
 
     def get_expectation(self):
-        # return self.get_max_profit() * self.get_max_profit_prob() - \
-        #        self.get_max_loss() * self.get_max_loss_prob()
         return self.real_expectation()
 
     def get_break_even(self):

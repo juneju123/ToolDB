@@ -10,7 +10,6 @@
 
 class DateChain:
     def __init__(self):
-        # self.expiration = date
         self.single_option_dict = {}
 
     def append_single_option(self, strike, single_option):
