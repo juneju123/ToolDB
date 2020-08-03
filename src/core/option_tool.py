@@ -65,8 +65,8 @@ class OptionTool:
             OC6 = 'low_theo'    # bid > theo
 
                 ''') or "OC1,OC2,OC3"
-        option_conditions = option_conditions.split(',')
-        while len(set(option_conditions) - set(['OC1', 'OC2', 'OC3', 'C4', 'OC5', 'OC6'])) != 0:
+        self.conditions = option_conditions.split(',')
+        while len(set(self.conditions) - set(['OC1', 'OC2', 'OC3', 'C4', 'OC5', 'OC6'])) != 0:
             print('The entered conditions are not correct: ' + str(option_conditions))
             option_conditions = input('''Please select conditions, separate by comma(example: C1, C3, C6):
                     OC1 = 'high_volume'     # volume & open interest > 10
@@ -77,7 +77,7 @@ class OptionTool:
                     OC6 = 'low_theo'    # bid > theo
 
                         ''')
-            option_conditions = option_conditions.split(',')
+            self.conditions = option_conditions.split(',')
         option_conditions_dec = []
         for condition in self.conditions:
             if condition == 'OC1':

@@ -27,13 +27,6 @@ if __name__ == '__main__':
     for symbol in exclude_symbols:
         if symbol in symbol_list:
             symbol_list.remove(symbol)
-    # Option Conditions
-    OC1 = 'high_volume'  # volume & open interest > 10
-    OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
-    OC3 = 'OTM'  # OTM
-    OC4 = 'high_iv'  # iv > hv * 1.1
-    OC5 = 'low_delta'  # delta < 0.4
-    OC6 = 'low_theo'  # bid > theo
 
     start_time = global_vars.ROUND_NAME
     is_live = False
@@ -51,9 +44,10 @@ if __name__ == '__main__':
         print(traceback.format_exc())
         my_logger.debug(traceback.format_exc())
         # Send exception information
-        email_msg = "Exception happened on test: " + start_time
-        email_subject = "Exception happened on test: " + start_time
-        send_notification(email_subject, traceback.format_exc(), [])
+        # email_msg = "Exception happened on test: " + start_time
+        # email_subject = "Exception happened on test: " + start_time
+        # send_notification(email_subject, traceback.format_exc(), [])
+    finally:
+        # Send email notification with results
+        send_notification(email_subject, email_msg, result_files_list)
 
-    # Send email notification with results
-    send_notification(email_subject, email_msg, result_files_list)

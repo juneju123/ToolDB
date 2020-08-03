@@ -35,7 +35,6 @@ class SimpleScreener:
 
     def simple_screen(self):
         """
-
         :param min_volume:
         :param max_delta:
         :param iv_vs_hv:
