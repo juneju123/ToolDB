@@ -10,7 +10,7 @@ import copy
 import logging
 
 from src.core import data_request
-from src.helpers import option_db_helper, file_helpers
+from src.helpers import option_db_helper, general_helpers
 from src.pre_and_post import global_vars
 from src.process import screen_launcher
 
@@ -18,7 +18,7 @@ from src.process import screen_launcher
 class OptionTool:
     def __init__(self):
         self.symbol_list = []
-        self.exclude_symbols = file_helpers.FileHelpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
+        self.exclude_symbols = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
         self.start_time = global_vars.ROUND_NAME
         self.is_live = False
         self.conditions = []
@@ -47,9 +47,9 @@ class OptionTool:
                 ''')
 
         if choice == '1':
-            self.symbol_list = file_helpers.FileHelpers.read_symbol_list('symbol_list/Optionable.xlsx')
+            self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Optionable.xlsx')
         elif choice == '2':
-            self.symbol_list = file_helpers.FileHelpers.read_symbol_list('symbol_list/High_IV.xlsx')
+            self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/High_IV.xlsx')
         elif choice == '3':
             self.symbol_list = input(
                 "Please provide your symbol list file name. File should be saved in symbol_list directory.")
@@ -188,4 +188,7 @@ class OptionTool:
 
 
 def process_input(message):
-    return float(message) if message == float else 0.0
+    try:
+        return float(message)
+    except ValueError:
+        return 0.0

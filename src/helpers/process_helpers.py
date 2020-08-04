@@ -8,7 +8,8 @@
 """
 from datetime import datetime
 
-from src.process import study
+from src.process import study_tools
+from src.process.study_tools import StudyTools
 
 
 def clean_option_dict(option, underlying_price, underlying_symbol):
@@ -19,7 +20,7 @@ def clean_option_dict(option, underlying_price, underlying_symbol):
     option['underlying_price'] = underlying_price
     option['underlying_symbol'] = underlying_symbol
     option['bidAskSpread'] = option['ask'] - option['bid']
-    option['probITM'] = study.cal_prob_itm(option['strikePrice'], option['underlying_price'], option['volatility'],
+    option['probITM'] = StudyTools.cal_prob_itm(option['strikePrice'], option['underlying_price'], option['volatility'],
                                            option['daysToExpiration'], option['putCall'])
 
     return option

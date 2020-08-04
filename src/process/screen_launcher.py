@@ -11,8 +11,8 @@ import logging
 import pandas as pd
 from tqdm import tqdm
 
-from src.helpers import file_helpers
-from src.option_objects.vertical_spread import VerticalSpread
+from src.helpers import general_helpers
+from src.option_objects.vertical_spread_obj import VerticalSpread
 from src.pre_and_post import global_vars
 
 my_logger = logging.getLogger(__name__)
@@ -50,7 +50,8 @@ class SimpleScreener:
                 date_chain: date_chain.DateChain = option_chains.get_date_chain(date)
                 delete_strikes = []
                 for single_option in date_chain.single_option_dict.values():
-                    if single_option.daysToExpiration > self.max_days_to_expiration or single_option.daysToExpiration < self.min_days_to_expiration:
+                    if single_option.daysToExpiration > self.max_days_to_expiration or \
+                            single_option.daysToExpiration < self.min_days_to_expiration:
                         delete_strikes.append(single_option)
                         continue
                     for condition in self.conditions:
@@ -94,6 +95,7 @@ class SpreadScreener:
         self.conditions = conditions
 
     def vertical_screen_launcher(self):
+        helpers = global_vars.general_helpers
         spread_result = pd.DataFrame(columns=global_vars.SPREAD_COLUMNS)
         for symbol in tqdm(self.symbol_list):
             # Screen Spread based on spread conditions
@@ -102,8 +104,8 @@ class SpreadScreener:
                 # Add filtered spreads to result list
                 spread_result = spread_result.append(spread, ignore_index=True)
         # Generate output csv file
-        output_file = file_helpers.FileHelpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
-                                                      self.conditions)
+        output_file = helpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
+                                                                        self.conditions)
         my_logger.info('Option screen completed. Start writing results to csv files...')
         return output_file
 
@@ -132,8 +134,10 @@ class SpreadScreener:
                     leg2 = date_chain.get_next_x_option(leg1.strikePrice, wide)
                     if leg2:
                         spread = VerticalSpread(leg1, leg2, self.credit_debit, self.put_call)
-                        if spread.max_loss >= self.max_loss and spread.max_profit_prob > self.prob_of_max_profit \
-                                and spread.get_max_profit() > self.min_profit and spread.expectation > self.min_expectation:
+                        if spread.max_loss >= self.max_loss and \
+                                spread.max_profit_prob > self.prob_of_max_profit \
+                                and spread.get_max_profit() > self.min_profit \
+                                and spread.expectation > self.min_expectation:
                             spread.to_string()
                             good_verticals.append(spread)
                     wide += 1

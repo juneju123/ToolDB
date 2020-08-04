@@ -15,10 +15,10 @@ from datetime import datetime, timedelta
 import pandas as pd
 import requests
 
-from src.helpers.file_helpers import FileHelpers
+from src.helpers.general_helpers import GeneralHelpers
 
 current_path = os.getcwd()
-API_KEY = FileHelpers.read_string_from_file('src/private_info/API_KEY')
+API_KEY = GeneralHelpers.read_string_from_file('src/private_info/API_KEY')
 my_logger = logging.getLogger(__name__)
 
 
