@@ -7,6 +7,7 @@
 @Project:   OptionToolDb
 """
 import math
+from datetime import datetime
 
 import numpy as np
 from numpy import sqrt, mean, log, diff
@@ -28,7 +29,7 @@ from src.process.tda_api_request import request_price_history, RequestError
 #     std = sqrt(sum(diff_square) * (1.0 / (len(r) - 1)))
 #     return round(std * sqrt(252), 2)
 
-class StudyTools:
+class OptionHelpers:
     def __init__(self):
         pass
 
@@ -60,3 +61,17 @@ class StudyTools:
         single_date_chain = option_chains.get_date_chain(date)
         strike = single_date_chain.get_closest_strike(price)
         return single_date_chain.get_single_option(strike).volatility
+
+    @staticmethod
+    def clean_option_dict(option, underlying_price, underlying_symbol):
+        for key in ['tradeTimeInLong', 'quoteTimeInLong', 'expirationDate', 'lastTradingDay']:
+            option[key] = str(datetime.fromtimestamp(option[key] / 1e3).date())
+        for key in ['optionDeliverablesList', 'deliverableNote', 'tradeDate', 'isIndexOption', 'settlementType']:
+            del option[key]
+        option['underlying_price'] = underlying_price
+        option['underlying_symbol'] = underlying_symbol
+        option['bidAskSpread'] = option['ask'] - option['bid']
+        option['probITM'] = OptionHelpers.cal_prob_itm(option['strikePrice'], option['underlying_price'], option['volatility'],
+                                                       option['daysToExpiration'], option['putCall'])
+
+        return option

@@ -11,7 +11,7 @@ import logging
 import pymysql
 from tqdm import tqdm
 
-from src.helpers import process_helpers
+import src.helpers.option_helpers
 from src.option_objects import option_chain_obj, date_chain_obj, single_option_obj
 from src.process import tda_api_request
 
@@ -54,7 +54,7 @@ class DataRequest:
                             option = date_chain[strike][0]
                             if option['totalVolume'] == 0 or option['theoreticalOptionValue'] == -999:
                                 continue
-                            option = process_helpers.clean_option_dict(option, underlying_price, underlying_symbol)
+                            option = src.helpers.option_helpers.OptionHelpers.clean_option_dict(option, underlying_price, underlying_symbol)
                             try:
                                 self.db_conn.insert_dict(symbol + '_options', option)
                             except pymysql.err.DataError:

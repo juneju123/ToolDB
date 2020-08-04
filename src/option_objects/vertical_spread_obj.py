@@ -9,8 +9,7 @@
 
 import pandas as pd
 
-from src.process import study_tools
-from src.process.study_tools import StudyTools
+from src.helpers.option_helpers import OptionHelpers
 
 
 class VerticalSpread:
@@ -120,11 +119,11 @@ class VerticalSpread:
             return self.leg1.get_strike() + self.get_premium()
 
     def get_profit_prob(self):
-        return StudyTools.cal_prob_itm(self.get_break_even(), self.leg1.underlying_price,
-                                        StudyTools.search_near_strike_volatility(self.leg1.underlying_symbol,
-                                                                      self.get_break_even(), self.leg1.expirationDate,
-                                                                      self.leg1.putCall),
-                                        self.leg1.daysToExpiration, self.leg1.putCall)
+        return OptionHelpers.cal_prob_itm(self.get_break_even(), self.leg1.underlying_price,
+                                          OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol,
+                                                                                      self.get_break_even(), self.leg1.expirationDate,
+                                                                                      self.leg1.putCall),
+                                          self.leg1.daysToExpiration, self.leg1.putCall)
 
     def get_date_string(self):
         option_symbol = self.leg1.symbol
@@ -202,22 +201,22 @@ class VerticalSpread:
         put_call = self.leg1.putCall
         break_even = self.get_break_even()
         mid_profit_price = (break_even + self.get_max_profit_price()) / 2
-        mid_profit_volatility = StudyTools.search_near_strike_volatility(self.leg1.underlying_symbol, mid_profit_price,
-                                                                    self.leg1.expirationDate, put_call)
-        mid_profit_prob = StudyTools.cal_prob_itm(mid_profit_price,
-                                                   self.leg1.underlying_price,
-                                                   mid_profit_volatility,
-                                                   self.leg1.daysToExpiration, put_call)
+        mid_profit_volatility = OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol, mid_profit_price,
+                                                                            self.leg1.expirationDate, put_call)
+        mid_profit_prob = OptionHelpers.cal_prob_itm(mid_profit_price,
+                                                     self.leg1.underlying_price,
+                                                     mid_profit_volatility,
+                                                     self.leg1.daysToExpiration, put_call)
         break_even_prob = self.get_profit_prob()
         mid_profit_expect = abs(mid_profit_prob - break_even_prob) * self.get_max_profit() / 2
 
         mid_loss_price = (break_even + self.get_max_loss_price()) / 2
-        mid_loss_volatility = StudyTools.search_near_strike_volatility(self.leg1.underlying_symbol, mid_loss_price,
-                                                                  self.leg1.expirationDate, put_call)
-        mid_loss_prob = StudyTools.cal_prob_itm(mid_loss_price,
-                                                 self.leg1.underlying_price,
-                                                 mid_loss_volatility,
-                                                 self.leg1.daysToExpiration, put_call)
+        mid_loss_volatility = OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol, mid_loss_price,
+                                                                          self.leg1.expirationDate, put_call)
+        mid_loss_prob = OptionHelpers.cal_prob_itm(mid_loss_price,
+                                                   self.leg1.underlying_price,
+                                                   mid_loss_volatility,
+                                                   self.leg1.daysToExpiration, put_call)
         mid_loss_expect = abs(mid_loss_prob - break_even_prob) * self.get_max_loss() / 2
 
         return mid_loss_expect + mid_profit_expect + self.max_profit * self.max_profit_prob + \
