@@ -34,13 +34,13 @@ class DataRequest:
             percentChange FLOAT, markChange FLOAT, 
             markPercentChange FLOAT, nonStandard CHAR(5), inTheMoney CHAR(5), mini CHAR(5), bidAskSpread FLOAT, 
             probITM FLOAT"""
-
+        api_requester = tda_api_request.TdApiRequester()
         if self.real_data:
             my_logger.info('Request real data.....')
             for symbol in tqdm(self.symbol_list):
                 self.db_conn.create_option_table(symbol + '_options', option_column_names)
                 try:
-                    response = tda_api_request.request_option_chain(symbol=symbol)
+                    response = api_requester.request_option_chain(symbol=symbol)
                 except tda_api_request.RequestError:
                     continue
                 underlying_price = response['underlyingPrice']

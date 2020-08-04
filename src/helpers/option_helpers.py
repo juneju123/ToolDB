@@ -14,8 +14,6 @@ from numpy import sqrt, mean, log, diff
 from scipy.stats import norm
 
 from src.pre_and_post import global_vars
-from src.process.tda_api_request import request_price_history, RequestError
-
 
 # def historical_volatility(symbol):
 #     try:
