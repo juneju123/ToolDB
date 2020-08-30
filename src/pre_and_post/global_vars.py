@@ -26,3 +26,18 @@ OPTION_COLUMNS = ['underlying symbol', 'underlying price', 'symbol',
                   'strike', 'daysToExpiration', 'bid', 'ask', 'implied volatility',
                   'theoretical price', 'delta', 'total volume', 'putCall']
 general_helpers = GeneralHelpers()
+
+IS_GUI = False
+
+IS_LIVE = True
+MAX_LOSS = -3.5
+MIN_PROFIT = 0.5
+MIN_EXPECTATION = 0.05
+PROB_OF_MAX_PROFIT = 0.7
+MAX_STRIKES_WIDE = 3
+MIN_DAYS_TO_EXPIRATION = 30
+MAX_DAYS_TO_EXPIRATION = 50
+SPREAD_STRATEGY = 'all'
+CONDITIONS = []
+CHOICE = 1
+SYMBOL_LIST = []

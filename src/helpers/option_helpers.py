@@ -10,10 +10,10 @@ import math
 from datetime import datetime
 
 import numpy as np
-from numpy import sqrt, mean, log, diff
 from scipy.stats import norm
 
 from src.pre_and_post import global_vars
+
 
 # def historical_volatility(symbol):
 #     try:
@@ -36,7 +36,8 @@ class OptionHelpers:
         if days_to_expiration == 0:
             days_to_expiration = 0.01
         try:
-            temp = norm.cdf(math.log(strike / underlying_price) / (volatility / 100 * np.sqrt(days_to_expiration / 365)))
+            temp = norm.cdf(
+                math.log(strike / underlying_price) / (volatility / 100 * np.sqrt(days_to_expiration / 365)))
         except ValueError:
             pass
         prob_itm = temp if put_call == "PUT" else 1 - temp
@@ -69,7 +70,8 @@ class OptionHelpers:
         option['underlying_price'] = underlying_price
         option['underlying_symbol'] = underlying_symbol
         option['bidAskSpread'] = option['ask'] - option['bid']
-        option['probITM'] = OptionHelpers.cal_prob_itm(option['strikePrice'], option['underlying_price'], option['volatility'],
+        option['probITM'] = OptionHelpers.cal_prob_itm(option['strikePrice'], option['underlying_price'],
+                                                       option['volatility'],
                                                        option['daysToExpiration'], option['putCall'])
 
         return option

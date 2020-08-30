@@ -11,7 +11,6 @@ import logging
 import pandas as pd
 from tqdm import tqdm
 
-from src.helpers import general_helpers
 from src.option_objects.vertical_spread_obj import VerticalSpread
 from src.pre_and_post import global_vars
 
@@ -105,7 +104,7 @@ class SpreadScreener:
                 spread_result = spread_result.append(spread, ignore_index=True)
         # Generate output csv file
         output_file = helpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
-                                                                        self.conditions)
+                                                 self.conditions)
         my_logger.info('Option screen completed. Start writing results to csv files...')
         return output_file
 

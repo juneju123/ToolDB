@@ -17,12 +17,10 @@ import requests
 
 from src.helpers.general_helpers import GeneralHelpers
 
-current_path = os.getcwd()
-API_KEY = GeneralHelpers.read_string_from_file('src/private_info/API_KEY')
 my_logger = logging.getLogger(__name__)
 
 
-class TdApiRequester:
+class TdApi:
     def __init__(self):
         self.api_key = GeneralHelpers.read_string_from_file('src/private_info/API_KEY')
 

@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 import src.helpers.option_helpers
 from src.option_objects import option_chain_obj, date_chain_obj, single_option_obj
-from src.process import tda_api_request
+from src.process import tda_api
 
 
 class DataRequest:
@@ -34,14 +34,14 @@ class DataRequest:
             percentChange FLOAT, markChange FLOAT, 
             markPercentChange FLOAT, nonStandard CHAR(5), inTheMoney CHAR(5), mini CHAR(5), bidAskSpread FLOAT, 
             probITM FLOAT"""
-        api_requester = tda_api_request.TdApiRequester()
+        api_requester = tda_api.TdApi()
         if self.real_data:
             my_logger.info('Request real data.....')
             for symbol in tqdm(self.symbol_list):
                 self.db_conn.create_option_table(symbol + '_options', option_column_names)
                 try:
                     response = api_requester.request_option_chain(symbol=symbol)
-                except tda_api_request.RequestError:
+                except tda_api.RequestError:
                     continue
                 underlying_price = response['underlyingPrice']
                 underlying_symbol = response['symbol']
@@ -52,9 +52,12 @@ class DataRequest:
                         date_chain = date_map[date_string]
                         for strike in date_chain.keys():
                             option = date_chain[strike][0]
-                            if option['totalVolume'] == 0 or option['theoreticalOptionValue'] == -999:
+                            if option['totalVolume'] == 0 or option['theoreticalOptionValue'] == -999 \
+                                    or option['volatility'] == 'NaN':
                                 continue
-                            option = src.helpers.option_helpers.OptionHelpers.clean_option_dict(option, underlying_price, underlying_symbol)
+                            option = src.helpers.option_helpers.OptionHelpers.clean_option_dict(option,
+                                                                                                underlying_price,
+                                                                                                underlying_symbol)
                             try:
                                 self.db_conn.insert_dict(symbol + '_options', option)
                             except pymysql.err.DataError:

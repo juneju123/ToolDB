@@ -12,26 +12,17 @@ import traceback
 from datetime import datetime
 
 from src.core import option_tool
-from src.gui import Ui_qtExample
 from src.pre_and_post import global_vars
-from PyQt5 import QtCore, QtGui, QtWidgets
 
-if __name__ == '__main__':
+
+def start():
     helpers = global_vars.general_helpers
     helpers.log_config()
     my_logger = logging.getLogger(__name__)
 
     # Initial Variables
     result_files_list = []
-    # Excluded some un-wanted symbols
-    exclude_symbols = helpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
-    # All optionable symbols
-    symbol_list = helpers.read_symbol_list('symbol_list/Optionable.xlsx')
-    # Filter symbols
-    for symbol in exclude_symbols:
-        if symbol in symbol_list:
-            symbol_list.remove(symbol)
-    # Get start time
+
     start_time = global_vars.ROUND_NAME
     is_live = False
     try:

@@ -16,7 +16,8 @@ from src.process import screen_launcher
 
 
 class OptionTool:
-    def __init__(self):
+    def __init__(self, is_gui):
+        self.is_gui = is_gui
         self.symbol_list = []
         self.exclude_symbols = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
         self.start_time = global_vars.ROUND_NAME
@@ -36,73 +37,88 @@ class OptionTool:
         self.option_db = option_db_helper.OptionDbHelpers('option_tool_db')
 
     def pre_execution(self):
-        choice = 0
-        while choice not in ['1', '2', '3', '4']:
-            choice = input('''
-                Please make a choice:
-                1. Screen all optional stocks/ETF in the market
-                2. Screen all high volatility stocks/ETF in the market
-                3. Screen specific symbol list file
-                4. Screen small number of symbols
-                ''')
+        if self.is_gui:
+            self.is_live = global_vars.IS_LIVE
+            self.max_loss = global_vars.MAX_LOSS
+            self.min_profit = global_vars.MIN_PROFIT
+            self.min_expectation = global_vars.MIN_EXPECTATION
+            self.prob_of_max_profit = global_vars.PROB_OF_MAX_PROFIT
+            self.max_strikes_wide = global_vars.MAX_STRIKES_WIDE
+            self.min_days_to_expiration = global_vars.MIN_DAYS_TO_EXPIRATION
+            self.max_days_to_expiration = global_vars.MAX_DAYS_TO_EXPIRATION
+            self.spread_strategy = global_vars.SPREAD_STRATEGY
+            self.symbol_list = global_vars.SYMBOL_LIST
+            self.conditions = global_vars.CONDITIONS
 
-        if choice == '1':
-            self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Optionable.xlsx')
-        elif choice == '2':
-            self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/High_IV.xlsx')
-        elif choice == '3':
-            self.symbol_list = input(
-                "Please provide your symbol list file name. File should be saved in symbol_list directory.")
-        elif choice == '4':
-            self.symbol_list = input("Please input symbol list(separate by comma, example: AAPL,SPY):").split(',')
+        else:
+            choice = 0
+            while choice not in ['1', '2', '3', '4']:
+                choice = input('''
+                    Please make a choice:
+                    1. Screen all optional stocks/ETF in the market
+                    2. Screen all high volatility stocks/ETF in the market
+                    3. Screen specific symbol list file
+                    4. Screen small number of symbols
+                    ''')
 
-        option_conditions = input('''Please select conditions, separate by comma(example: C1, C3, C6)[OC1,OC2,OC3]:
-            OC1 = 'high_volume'     # volume & open interest > 10
-            OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
-            OC3 = 'OTM'         # OTM
-            OC4 = 'high_iv'     # iv > hv * 1.1
-            OC5 = 'low_delta'   # delta < 0.4
-            OC6 = 'low_theo'    # bid > theo
+            if choice == '1':
+                self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Optionable.xlsx')
+            elif choice == '2':
+                self.symbol_list = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/High_IV.xlsx')
+            elif choice == '3':
+                self.symbol_list = input(
+                    "Please provide your symbol list file name. File should be saved in symbol_list directory.")
+            elif choice == '4':
+                self.symbol_list = input("Please input symbol list(separate by comma, example: AAPL,SPY):").split(',')
 
-                ''') or "OC1,OC2,OC3"
-        self.conditions = option_conditions.split(',')
-        while len(set(self.conditions) - set(['OC1', 'OC2', 'OC3', 'C4', 'OC5', 'OC6'])) != 0:
-            print('The entered conditions are not correct: ' + str(option_conditions))
-            option_conditions = input('''Please select conditions, separate by comma(example: C1, C3, C6):
-                    OC1 = 'high_volume'     # volume & open interest > 10
-                    OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
-                    OC3 = 'OTM'         # OTM
-                    OC4 = 'high_iv'     # iv > hv * 1.1
-                    OC5 = 'low_delta'   # delta < 0.4
-                    OC6 = 'low_theo'    # bid > theo
-
-                        ''')
+            option_conditions = input('''Please select conditions, separate by comma(example: C1, C3, C6)[OC1,OC2,OC3]:
+                OC1 = 'high_volume'     # volume & open interest > 10
+                OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
+                OC3 = 'OTM'         # OTM
+                OC4 = 'high_iv'     # iv > hv * 1.1
+                OC5 = 'low_delta'   # delta < 0.4
+                OC6 = 'low_theo'    # bid > theo
+    
+                    ''') or "OC1,OC2,OC3"
             self.conditions = option_conditions.split(',')
-        option_conditions_dec = []
-        for condition in self.conditions:
-            if condition == 'OC1':
-                option_conditions_dec.append('high_volume')
-            elif condition == 'OC2':
-                option_conditions_dec.append('narrow_bid_ask')
-            elif condition == 'OC3':
-                option_conditions_dec.append('OTM')
-            elif condition == 'OC4':
-                option_conditions_dec.append('high_iv')
-            elif condition == 'OC5':
-                option_conditions_dec.append('low_delta')
-            elif condition == 'OC6':
-                option_conditions_dec.append('low_theo')
+            while len(set(self.conditions) - set(['OC1', 'OC2', 'OC3', 'C4', 'OC5', 'OC6'])) != 0:
+                print('The entered conditions are not correct: ' + str(option_conditions))
+                option_conditions = input('''Please select conditions, separate by comma(example: C1, C3, C6):
+                        OC1 = 'high_volume'     # volume & open interest > 10
+                        OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
+                        OC3 = 'OTM'         # OTM
+                        OC4 = 'high_iv'     # iv > hv * 1.1
+                        OC5 = 'low_delta'   # delta < 0.4
+                        OC6 = 'low_theo'    # bid > theo
+    
+                            ''')
+                self.conditions = option_conditions.split(',')
+            option_conditions_dec = []
+            for condition in self.conditions:
+                if condition == 'OC1':
+                    option_conditions_dec.append('high_volume')
+                elif condition == 'OC2':
+                    option_conditions_dec.append('narrow_bid_ask')
+                elif condition == 'OC3':
+                    option_conditions_dec.append('OTM')
+                elif condition == 'OC4':
+                    option_conditions_dec.append('high_iv')
+                elif condition == 'OC5':
+                    option_conditions_dec.append('low_delta')
+                elif condition == 'OC6':
+                    option_conditions_dec.append('low_theo')
 
-        self.conditions = option_conditions_dec
-        self.is_live = input('Do you want to use live data or not?[No]') == 'Yes'
-        self.max_loss = process_input(input('Spread max_loss[-3.5]:')) or -3.5
-        self.min_profit = process_input(input('Spread min_profit[0.5]:')) or 0.5
-        self.min_expectation = process_input(input('Spread min_expectation[0.05]:')) or 0.05
-        self.prob_of_max_profit = process_input(input('Spread prob_of_max_profit[0.7]:')) or 0.7
-        self.max_strikes_wide = process_input(input('Spread max_strikes_wide[2]:')) or 2
-        self.min_days_to_expiration = process_input(input('Minimum days to expiration[30]: ')) or 30
-        self.max_days_to_expiration = process_input(input('Maximum days to expiration[50]: '))or 50
-        self.spread_strategy = process_input(input('Please choose your spread strategy(bullish, bearish, all)[all]: ')) or 'all'
+            self.conditions = option_conditions_dec
+            self.is_live = input('Do you want to use live data or not?[No]') == 'Yes'
+            self.max_loss = process_input(input('Spread max_loss[-3.5]:')) or -3.5
+            self.min_profit = process_input(input('Spread min_profit[0.5]:')) or 0.5
+            self.min_expectation = process_input(input('Spread min_expectation[0.05]:')) or 0.05
+            self.prob_of_max_profit = process_input(input('Spread prob_of_max_profit[0.7]:')) or 0.7
+            self.max_strikes_wide = process_input(input('Spread max_strikes_wide[2]:')) or 2
+            self.min_days_to_expiration = process_input(input('Minimum days to expiration[30]: ')) or 30
+            self.max_days_to_expiration = process_input(input('Maximum days to expiration[50]: ')) or 50
+            self.spread_strategy = process_input(
+                input('Please choose your spread strategy(bullish, bearish, all)[all]: ')) or 'all'
 
     def execution(self):
         my_logger = logging.getLogger(__name__)

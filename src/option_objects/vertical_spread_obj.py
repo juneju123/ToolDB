@@ -121,7 +121,8 @@ class VerticalSpread:
     def get_profit_prob(self):
         return OptionHelpers.cal_prob_itm(self.get_break_even(), self.leg1.underlying_price,
                                           OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol,
-                                                                                      self.get_break_even(), self.leg1.expirationDate,
+                                                                                      self.get_break_even(),
+                                                                                      self.leg1.expirationDate,
                                                                                       self.leg1.putCall),
                                           self.leg1.daysToExpiration, self.leg1.putCall)
 
@@ -176,13 +177,13 @@ class VerticalSpread:
         vertical_spread = {'description': self.to_string()}
         vertical_spread['underlying symbol'] = self.leg1.underlying_symbol
         vertical_spread['underlying price'] = self.leg1.underlying_price
-        vertical_spread['spread premium'] = self.get_premium()
-        vertical_spread['spread theo premium'] = self.get_theo_premium()
-        vertical_spread['expectation'] = self.get_expectation()
-        vertical_spread['max profit'] = self.get_max_profit()
-        vertical_spread['max loss'] = self.get_max_loss()
-        vertical_spread['max profit prob'] = self.get_max_profit_prob()
-        vertical_spread['max loss prob'] = self.get_max_loss_prob()
+        vertical_spread['spread premium'] = round(self.get_premium(), 2)
+        vertical_spread['spread theo premium'] = round(self.get_theo_premium(), 2)
+        vertical_spread['expectation'] = round(self.get_expectation(), 2)
+        vertical_spread['max profit'] = round(self.get_max_profit(), 2)
+        vertical_spread['max loss'] = round(self.get_max_loss(), 2)
+        vertical_spread['max profit prob'] = round(self.get_max_profit_prob(), 2)
+        vertical_spread['max loss prob'] = round(self.get_max_loss_prob(), 2)
         vertical_spread['leg1 symbol'] = self.leg1.symbol
         vertical_spread['leg2 symbol'] = self.leg2.symbol
         vertical_spread['leg1 theo'] = self.leg1.theoreticalOptionValue
@@ -201,7 +202,8 @@ class VerticalSpread:
         put_call = self.leg1.putCall
         break_even = self.get_break_even()
         mid_profit_price = (break_even + self.get_max_profit_price()) / 2
-        mid_profit_volatility = OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol, mid_profit_price,
+        mid_profit_volatility = OptionHelpers.search_near_strike_volatility(self.leg1.underlying_symbol,
+                                                                            mid_profit_price,
                                                                             self.leg1.expirationDate, put_call)
         mid_profit_prob = OptionHelpers.cal_prob_itm(mid_profit_price,
                                                      self.leg1.underlying_price,

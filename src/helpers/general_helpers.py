@@ -8,15 +8,15 @@
 """
 import logging.config
 import os
-
-from pandas import read_excel
-
-from src.pre_and_post import global_vars
 import smtplib
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+from pandas import read_excel
+
+from src.pre_and_post import global_vars
 
 
 class GeneralHelpers:
