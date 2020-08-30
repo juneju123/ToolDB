@@ -7,14 +7,11 @@
 @Project:   OptionToolDb
 """
 import logging
-import sys
 import traceback
 from datetime import datetime
 
 from src.core import option_tool
-from src.gui import Ui_qtExample
 from src.pre_and_post import global_vars
-from PyQt5 import QtCore, QtGui, QtWidgets
 
 if __name__ == '__main__':
     helpers = global_vars.general_helpers

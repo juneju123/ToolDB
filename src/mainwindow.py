@@ -10,17 +10,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from src import start
-from src.pre_and_post import global_vars
-from src.pre_and_post.global_vars import general_helpers
-
-
-class Ui_qtExample(object):
-    def setupUi(self, qtExample):
-        qtExample.setObjectName("qtExample")
-        qtExample.setEnabled(True)
-        qtExample.resize(800, 600)
-        self.centralwidget = QtWidgets.QWidget(qtExample)
+class MainWindow(object):
+    def setup_ui(self, window):
+        window.setObjectName("Option Tool")
+        window.setEnabled(True)
+        window.resize(800, 600)
+        self.centralwidget = QtWidgets.QWidget(window)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(20, 40, 121, 209))
@@ -186,23 +181,20 @@ class Ui_qtExample(object):
         self.lineEdit_symbols_file.setEnabled(False)
         self.lineEdit_symbols_file.setGeometry(QtCore.QRect(20, 470, 281, 21))
         self.lineEdit_symbols_file.setObjectName("lineEdit_symbols_file")
-        qtExample.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(qtExample)
+        window.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
         self.menubar.setObjectName("menubar")
         self.menuOptionTool = QtWidgets.QMenu(self.menubar)
         self.menuOptionTool.setObjectName("menuOptionTool")
-        qtExample.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(qtExample)
+        window.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(window)
         self.statusbar.setObjectName("statusbar")
-        qtExample.setStatusBar(self.statusbar)
+        window.setStatusBar(self.statusbar)
         self.menubar.addAction(self.menuOptionTool.menuAction())
 
-        self.retranslateUi(qtExample)
-        QtCore.QMetaObject.connectSlotsByName(qtExample)
-        self.pushButton_Start.released.connect(self.startClicked)
-        self.radioButton_manual_symbol.toggled.connect(self.lineEdit_symbols.setEnabled)
-        self.radioButton_symbol_file.toggled.connect(self.lineEdit_symbols_file.setEnabled)
+        self.retranslateUi(window)
+        QtCore.QMetaObject.connectSlotsByName(window)
 
     def retranslateUi(self, qtExample):
         _translate = QtCore.QCoreApplication.translate
@@ -234,47 +226,3 @@ class Ui_qtExample(object):
         self.label_symbol_file.setText(_translate("qtExample", "Please input symbol file path:"))
         self.menuOptionTool.setTitle(_translate("qtExample", "OptionTool"))
 
-    def startClicked(self):
-        global_vars.IS_GUI = True
-        global_vars.MAX_LOSS = -round(self.doubleSpinBox_max_loss.value(), 2)
-        global_vars.IS_LIVE = self.radioButton_live.isChecked()
-        global_vars.MIN_PROFIT = round(self.doubleSpinBox_min_profit.value(), 2)
-        global_vars.MAX_DAYS_TO_EXPIRATION = round(self.spinBox_max_days_expire.value())
-        global_vars.MIN_DAYS_TO_EXPIRATION = round(self.spinBox_min_days_expire.value())
-        global_vars.MAX_STRIKES_WIDE = round(self.spinBox_max_strike_width.value())
-        global_vars.MIN_EXPECTATION = round(self.doubleSpinBox_min_expect.value(), 2)
-        global_vars.PROB_OF_MAX_PROFIT = round(self.doubleSpinBox_prob_max_profit.value(), 2)
-        if self.radioButton_bullish.isChecked():
-            global_vars.SPREAD_STRATEGY = 'bullish'
-        elif self.radioButton_bearish.isChecked():
-            global_vars.SPREAD_STRATEGY = 'bearish'
-        elif self.radioButton_both.isChecked():
-            global_vars.SPREAD_STRATEGY = 'all'
-        for i in range(self.gridLayout_Conditions.count()):
-            if self.gridLayout_Conditions.itemAt(i).widget().isChecked():
-                global_vars.CONDITIONS.append(self.gridLayout_Conditions.itemAt(i).widget().objectName())
-
-        for i in range(self.verticalLayout_choice.count()):
-            if self.verticalLayout_choice.itemAt(i).widget().isChecked():
-                global_vars.CHOICE = i
-                break
-
-        if global_vars.CHOICE == 0:
-            global_vars.SYMBOL_LIST = general_helpers.read_symbol_list('symbol_list/Optionable.xlsx')
-        elif global_vars.CHOICE == 1:
-            global_vars.SYMBOL_LIST = general_helpers.read_symbol_list('symbol_list/High_IV.xlsx')
-        elif global_vars.CHOICE == 2:
-            global_vars.SYMBOL_LIST = general_helpers.read_symbol_list(self.lineEdit_symbols_file.text())
-        elif global_vars.CHOICE == 3:
-            global_vars.SYMBOL_LIST = self.lineEdit_symbols.text().split(',')
-        start.start()
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    qtExample = QtWidgets.QMainWindow()
-    ui = Ui_qtExample()
-    ui.setupUi(qtExample)
-    qtExample.show()
-    sys.exit(app.exec_())
