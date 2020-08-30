@@ -1,0 +1,4 @@
+/src/private_info/
+/result/
+.DS_Store
+debug.log

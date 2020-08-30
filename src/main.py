@@ -6,56 +6,53 @@
 @File:      Main
 @Project:   OptionToolDb
 """
+import logging
+import sys
 import traceback
 from datetime import datetime
 
-from src.helpers import file_helpers, log_config
-from src.pre_and_post import global_vars, user_input
-from src.core import option_tool_launcher
-import logging
-from src.pre_and_post.send_notification import send_notification
+from src.core import option_tool
+from src.gui import Ui_qtExample
+from src.pre_and_post import global_vars
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 if __name__ == '__main__':
-    log_config.log_config()
+    helpers = global_vars.general_helpers
+    helpers.log_config()
     my_logger = logging.getLogger(__name__)
 
     # Initial Variables
     result_files_list = []
-    exclude_symbols = file_helpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
-    symbol_list = file_helpers.read_symbol_list('symbol_list/Optionable.xlsx')
-    # symbol_list = ['SPY']
+    # Excluded some un-wanted symbols
+    exclude_symbols = helpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
+    # All optionable symbols
+    symbol_list = helpers.read_symbol_list('symbol_list/Optionable.xlsx')
+    # Filter symbols
     for symbol in exclude_symbols:
         if symbol in symbol_list:
             symbol_list.remove(symbol)
-    # Option Conditions
-    OC1 = 'high_volume'  # volume & open interest > 10
-    OC2 = 'narrow_bid_ask'  # bid ask spread < 0.2 * last price
-    OC3 = 'OTM'  # OTM
-    OC4 = 'high_iv'  # iv > hv * 1.1
-    OC5 = 'low_delta'  # delta < 0.4
-    OC6 = 'low_theo'  # bid > theo
-
+    # Get start time
     start_time = global_vars.ROUND_NAME
     is_live = False
     try:
-        symbol_list, option_conditions, is_live, max_loss, min_profit, min_expectation, prob_of_max_profit, \
-        max_strikes_wide, min_days_to_expiration, max_days_to_expiration, spread_strategy = user_input.user_input()
-        result_files_list = option_tool_launcher.execution(symbol_list, option_conditions, is_live, max_loss,
-                                                           min_profit, min_expectation, prob_of_max_profit,
-                                                           max_strikes_wide, min_days_to_expiration,
-                                                           max_days_to_expiration, spread_strategy)
+        # Initiate Option tool instance
+        handler = option_tool.OptionTool(global_vars.IS_GUI)
+        # Run pre execution to get input parameters
+        handler.pre_execution()
+        # Execution
+        result_files_list = handler.execution()
+        # Prepare email messages and subject
         email_msg = "Test starts at: " + str(start_time) + "\nTest ends at: " + str(datetime.today().strftime(
             '%Y%m%d_%H%M')) + "\nResult folder: " + global_vars.RESULT_FOLDER + '\n' + "Raw data folder: " + \
-                    global_vars.RAW_DATA_FOLDER + '\n' + 'Conditions: ' + str(option_conditions)
+                    global_vars.RAW_DATA_FOLDER + '\n'
         email_subject = global_vars.ROUND_NAME + "; is_live_data: " + str(is_live) + '; Option Screen Finished'
-
     except Exception as e:
         print(traceback.format_exc())
         my_logger.debug(traceback.format_exc())
         # Send exception information
         email_msg = "Exception happened on test: " + start_time
         email_subject = "Exception happened on test: " + start_time
-        send_notification(email_subject, traceback.format_exc(), [])
-
-    # Send email notification with results
-    send_notification(email_subject, email_msg, result_files_list)
+        # send_notification(email_subject, traceback.format_exc(), [])
+    finally:
+        # Send email notification with results
+        helpers.send_notification(email_subject, email_msg, result_files_list)
