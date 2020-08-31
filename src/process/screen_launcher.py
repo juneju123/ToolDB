@@ -6,15 +6,12 @@
 @File:      ScreenLauncher
 @Project:   OptionToolDb
 """
-import logging
 
 import pandas as pd
 from tqdm import tqdm
 
 from src.option_objects.vertical_spread_obj import VerticalSpread
 from src.pre_and_post import global_vars
-
-my_logger = logging.getLogger(__name__)
 
 
 class SimpleScreener:
@@ -80,7 +77,7 @@ class SimpleScreener:
 
 class SpreadScreener:
     def __init__(self, symbol_list, option_chain, conditions, credit_debit, put_call, spread_name, max_loss,
-                 min_profit, min_expectation, prob_of_max_profit, max_strikes_wide):
+                 min_profit, min_expectation, prob_of_max_profit, max_strikes_wide, log_handler):
         self.symbol_list = symbol_list
         self.option_chain = option_chain
         self.credit_debit = credit_debit
@@ -92,6 +89,7 @@ class SpreadScreener:
         self.prob_of_max_profit = prob_of_max_profit
         self.max_strikes_wide = max_strikes_wide
         self.conditions = conditions
+        self.log = log_handler
 
     def vertical_screen_launcher(self):
         helpers = global_vars.general_helpers
@@ -105,7 +103,7 @@ class SpreadScreener:
         # Generate output csv file
         output_file = helpers.save_spread_to_csv(spread_result, self.spread_name + '_spread_result',
                                                  self.conditions)
-        my_logger.info('Option screen completed. Start writing results to csv files...')
+        self.log.info('Option screen completed. Start writing results to csv files...')
         return output_file
 
     def spread_screen(self, symbol):

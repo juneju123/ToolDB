@@ -7,7 +7,6 @@
 @Project:   OptionToolDb
 """
 import copy
-import logging
 
 from src.core import data_request
 from src.helpers import option_db_helper, general_helpers
@@ -16,7 +15,7 @@ from src.process import screen_launcher
 
 
 class OptionTool:
-    def __init__(self, is_gui):
+    def __init__(self, is_gui, log_handler):
         self.is_gui = is_gui
         self.symbol_list = []
         self.exclude_symbols = general_helpers.GeneralHelpers.read_symbol_list('symbol_list/Exclude_Symbols.xlsx')
@@ -35,6 +34,7 @@ class OptionTool:
         self.all_put_chains = {}
         # Connect to Database
         self.option_db = option_db_helper.OptionDbHelpers('option_tool_db')
+        self.log = log_handler
 
     def pre_execution(self):
         if self.is_gui:
@@ -121,7 +121,6 @@ class OptionTool:
                 input('Please choose your spread strategy(bullish, bearish, all)[all]: ')) or 'all'
 
     def execution(self):
-        my_logger = logging.getLogger(__name__)
 
         # Initial parameters
         results_files_list = []
@@ -136,9 +135,9 @@ class OptionTool:
 
         # Disconnect Database
         self.option_db.conn_close()
-        my_logger.info('Database connection closed...')
+        self.log.info('Database connection closed...')
 
-        my_logger.info('Start screen options...')
+        self.log.info('Start screen options...')
 
         if self.spread_strategy == 'bullish':
             put_simple_screener = screen_launcher.SimpleScreener(self.symbol_list, self.all_put_chains, self.conditions,
@@ -181,7 +180,7 @@ class OptionTool:
                                                                      'bullish_put', self.max_loss,
                                                                      self.min_profit, self.min_expectation,
                                                                      self.prob_of_max_profit,
-                                                                     self.max_strikes_wide)
+                                                                     self.max_strikes_wide, self.log)
             bullish_put = bullish_spread_screener.vertical_screen_launcher()
 
             call_simple_screener = screen_launcher.SimpleScreener(self.symbol_list, self.all_call_chains,
@@ -195,7 +194,7 @@ class OptionTool:
                                                                      'bearish_call', self.max_loss,
                                                                      self.min_profit, self.min_expectation,
                                                                      self.prob_of_max_profit,
-                                                                     self.max_strikes_wide)
+                                                                     self.max_strikes_wide, self.log)
             bearish_call = bearish_spread_screener.vertical_screen_launcher()
 
             results_files_list = [bullish_put, bearish_call]

@@ -6,8 +6,6 @@
 @File:      Main
 @Project:   OptionToolDb
 """
-import logging
-import sys
 import traceback
 from datetime import datetime
 
@@ -15,19 +13,18 @@ from src.core import option_tool
 from src.pre_and_post import global_vars
 
 
-def start():
+def start(log_handler):
     helpers = global_vars.general_helpers
-    helpers.log_config()
-    my_logger = logging.getLogger(__name__)
+    my_logger = log_handler
+    my_logger.info("Hello!!!")
 
     # Initial Variables
     result_files_list = []
-
     start_time = global_vars.ROUND_NAME
     is_live = False
     try:
         # Initiate Option tool instance
-        handler = option_tool.OptionTool(global_vars.IS_GUI)
+        handler = option_tool.OptionTool(global_vars.IS_GUI, my_logger)
         # Run pre execution to get input parameters
         handler.pre_execution()
         # Execution

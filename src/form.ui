@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>qtExample</class>
- <widget class="QMainWindow" name="qtExample">
+ <class>option_tool</class>
+ <widget class="QMainWindow" name="option_tool">
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -134,6 +134,9 @@
        </property>
        <property name="singleStep">
         <double>0.010000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.700000000000000</double>
        </property>
       </widget>
      </item>
@@ -291,8 +294,8 @@
    <widget class="QPushButton" name="pushButton_Start">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>380</y>
+      <x>80</x>
+      <y>490</y>
       <width>171</width>
       <height>51</height>
      </rect>
@@ -356,7 +359,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>400</y>
+      <y>390</y>
       <width>281</width>
       <height>21</height>
      </rect>
@@ -379,7 +382,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>440</y>
+      <y>430</y>
       <width>191</width>
       <height>16</height>
      </rect>
@@ -395,9 +398,22 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
+      <y>450</y>
       <width>281</width>
       <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="plainTextEdit_output">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>270</y>
+      <width>381</width>
+      <height>261</height>
      </rect>
     </property>
    </widget>
