@@ -43,4 +43,5 @@ def start(log_handler):
         # send_notification(email_subject, traceback.format_exc(), [])
     finally:
         # Send email notification with results
-        helpers.send_notification(email_subject, email_msg, result_files_list)
+        # helpers.send_notification(email_subject, email_msg, result_files_list)
+        global_vars.RESULT_LIST = result_files_list

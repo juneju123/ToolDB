@@ -1,9 +1,10 @@
+import csv
 import logging
 import os
 import sys
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
-from src.ui.dialog_result import ui_result_window
+
 from src.ui.main_window import Ui_MainWindow
 from src.pre_and_post import global_vars
 from src import start
@@ -32,7 +33,6 @@ class OptionToolGui(Ui_MainWindow):
         self.plainTextEdit_output.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         my_logger.addHandler(self.plainTextEdit_output)
         my_logger.setLevel(logging.DEBUG)
-
 
     def start_clicked(self):
         global_vars.IS_GUI = True
@@ -70,7 +70,6 @@ class OptionToolGui(Ui_MainWindow):
         start.start(my_logger)
 
 
-
 class QPlainTextEditLogger(logging.Handler, QtCore.QObject):
     appendPlainText = QtCore.pyqtSignal(str)
 
@@ -89,29 +88,56 @@ class QPlainTextEditLogger(logging.Handler, QtCore.QObject):
         self.appendPlainText.emit(msg)
 
 
-class result_window(Ui_result_window):
+class ResultWindow(Ui_result_window):
     def __init__(self, result_window_base):
-        super(result_window, self).__init__()
+        super(ResultWindow, self).__init__()
         self.setupUi(result_window_base)
         self.init_ui()
         self.result_window_base = result_window_base
+        self.model = QtGui.QStandardItemModel()
+        self.result_table.setModel(self.model)
+
 
     def init_ui(self):
         pass
 
-    def result_clicked(self):
+    def show_result_window(self):
         self.result_window_base.show()
         pass
+
+    def show_table(self):
+        self.model.clear()
+        if self.radio_button_bullish.isChecked():
+            file_path = global_vars.RESULT_LIST[0]
+        else:
+            file_path = global_vars.RESULT_LIST[1]
+
+        with open(file_path, 'r') as f:
+            data = csv.reader(f)
+            headers = next(data)
+
+            for row in data:
+                items = [
+                    QtGui.QStandardItem(field)
+                    for field in row
+                ]
+                self.model.appendRow(items)
+        for column in range(self.model.columnCount()):
+            self.model.setHeaderData(column, QtCore.Qt.Horizontal, headers[column])
+        self.result_table.resizeColumnsToContents()
+
+    def close_table(self):
+        self.model.clear()
 
 if __name__ == "__main__":
     os.chdir("..")
     app = QtWidgets.QApplication(sys.argv)
-    mainWindow_base = QtWidgets.QMainWindow()
-    main_window = OptionToolGui(mainWindow_base)
-    result_dialog_base = QtWidgets.QDialog()
-    result_dialog = result_window(result_dialog_base)
+    main_window = OptionToolGui(QtWidgets.QMainWindow())
+    result_window = ResultWindow(QtWidgets.QWidget())
+    result_window.open.clicked.connect(result_window.show_table)
+    result_window.close.clicked.connect(result_window.close_table)
 
-    main_window.pushButton_Result.clicked.connect(result_dialog.result_clicked)
+    main_window.pushButton_Result.clicked.connect(result_window.show_result_window)
 
-    mainWindow_base.show()
+    main_window.main_window.show()
     sys.exit(app.exec_())
