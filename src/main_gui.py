@@ -3,30 +3,36 @@ import os
 import sys
 from PyQt5 import QtWidgets, QtCore
 
-from src.gui_window import MainWindow
+from src.ui.dialog_result import ui_result_window
+from src.ui.main_window import Ui_MainWindow
 from src.pre_and_post import global_vars
 from src import start
+from src.ui.result_window import Ui_result_window
 
 helpers = global_vars.general_helpers
 helpers.log_config()
 my_logger = logging.getLogger(__name__)
 
 
-class OptionToolGui(MainWindow):
+class OptionToolGui(Ui_MainWindow):
     def __init__(self, main_window):
         super().__init__()
-        self.setup_ui(main_window)
+        self.setupUi(main_window)
         self.main_window = main_window
         self.init_ui()
 
     def init_ui(self):
+        # Connect Start button
         self.pushButton_Start.released.connect(self.start_clicked)
+        # Connect radio Button with lineEdit
         self.radioButton_manual_symbol.toggled.connect(self.lineEdit_symbols.setEnabled)
         self.radioButton_symbol_file.toggled.connect(self.lineEdit_symbols_file.setEnabled)
+        # output log to textEdit
         self.plainTextEdit_output = QPlainTextEditLogger(self.main_window)
         self.plainTextEdit_output.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         my_logger.addHandler(self.plainTextEdit_output)
         my_logger.setLevel(logging.DEBUG)
+
 
     def start_clicked(self):
         global_vars.IS_GUI = True
@@ -64,6 +70,7 @@ class OptionToolGui(MainWindow):
         start.start(my_logger)
 
 
+
 class QPlainTextEditLogger(logging.Handler, QtCore.QObject):
     appendPlainText = QtCore.pyqtSignal(str)
 
@@ -79,14 +86,32 @@ class QPlainTextEditLogger(logging.Handler, QtCore.QObject):
 
     def emit(self, record):
         msg = self.format(record)
-        # self.widget.appendPlainText(msg)
         self.appendPlainText.emit(msg)
 
+
+class result_window(Ui_result_window):
+    def __init__(self, result_window_base):
+        super(result_window, self).__init__()
+        self.setupUi(result_window_base)
+        self.init_ui()
+        self.result_window_base = result_window_base
+
+    def init_ui(self):
+        pass
+
+    def result_clicked(self):
+        self.result_window_base.show()
+        pass
 
 if __name__ == "__main__":
     os.chdir("..")
     app = QtWidgets.QApplication(sys.argv)
-    mainWindow = QtWidgets.QMainWindow()
-    form = OptionToolGui(mainWindow)
-    mainWindow.show()
+    mainWindow_base = QtWidgets.QMainWindow()
+    main_window = OptionToolGui(mainWindow_base)
+    result_dialog_base = QtWidgets.QDialog()
+    result_dialog = result_window(result_dialog_base)
+
+    main_window.pushButton_Result.clicked.connect(result_dialog.result_clicked)
+
+    mainWindow_base.show()
     sys.exit(app.exec_())
