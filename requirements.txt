@@ -5,7 +5,7 @@ requests==2.24.0
 PyMySQL==0.10.0
 numpy==1.19.1
 xlrd==1.2.0
-cryptography==3.0
+cryptography==3.2
 pycparser==2.20
 cffi==1.14.1
 PyQt5~=5.15.0
