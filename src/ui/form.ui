@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>option_tool</class>
- <widget class="QMainWindow" name="option_tool">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -294,7 +294,7 @@
    <widget class="QPushButton" name="pushButton_Start">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>20</x>
       <y>490</y>
       <width>171</width>
       <height>51</height>
@@ -415,6 +415,24 @@
       <width>381</width>
       <height>261</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_Result">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>490</y>
+      <width>171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>30</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Result</string>
     </property>
    </widget>
   </widget>
