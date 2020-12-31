@@ -14,7 +14,6 @@ from src.pre_and_post import global_vars
 
 
 def start(log_handler):
-    helpers = global_vars.general_helpers
     my_logger = log_handler
     my_logger.info("Hello!!!")
 

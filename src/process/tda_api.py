@@ -14,15 +14,14 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 import requests
-
-from src.helpers.general_helpers import GeneralHelpers
+from src.pre_and_post.global_vars import general_helpers
 
 my_logger = logging.getLogger(__name__)
 
 
 class TdApi:
     def __init__(self):
-        self.api_key = GeneralHelpers.read_string_from_file('src/private_info/API_KEY')
+        self.api_key = general_helpers.read_string_from_file('src/private_info/API_KEY')
 
     def request_option_chain(self, **kwargs):
         """
