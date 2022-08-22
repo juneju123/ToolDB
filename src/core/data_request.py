@@ -31,8 +31,8 @@ class DataRequest:
             volatility FLOAT, delta FLOAT, gamma FLOAT, theta FLOAT, vega FLOAT, rho FLOAT, openInterest INT, 
             timeValue FLOAT, theoreticalOptionValue FLOAT, theoreticalVolatility FLOAT, strikePrice FLOAT, 
             expirationDate DATE, daysToExpiration INT, expirationType CHAR(5), lastTradingDay DATE, multiplier FLOAT, 
-            percentChange FLOAT, markChange FLOAT, 
-            markPercentChange FLOAT, nonStandard CHAR(5), inTheMoney CHAR(5), mini CHAR(5), bidAskSpread FLOAT, 
+            percentChange FLOAT, markChange FLOAT, intrinsicValue FLOAT, 
+            markPercentChange FLOAT, nonStandard CHAR(5), inTheMoney CHAR(5), mini CHAR(5), pennyPilot CHAR(5), bidAskSpread FLOAT, 
             probITM FLOAT"""
         api_requester = tda_api.TdApi()
         if self.real_data:
