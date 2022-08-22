@@ -6,6 +6,7 @@ from datetime import datetime
 import re
 import datetime
 import csv
+from mlxtend.feature_selection import SequentialFeatureSelector
 
 
 def clean_raw_csv(data_path, symbol, year, month):
@@ -17,6 +18,8 @@ def clean_raw_csv(data_path, symbol, year, month):
         writer = csv.writer(fp_out)
         head_flag = False
         for row in reader:
+            if len(row) == 56:
+                del row[0:2]
             if len(row) == 0:
                 continue
             elif not head_flag and "Option Code" in row[0]:
@@ -26,11 +29,11 @@ def clean_raw_csv(data_path, symbol, year, month):
                 writer.writerow(row)
             else:
                 continue
-    raw = pd.read_csv(output_path)
-    df = raw.drop(raw.columns[-2:], axis=1)
+    df = pd.read_csv(output_path)
+    #df = raw.drop(raw.columns[-2:], axis=1)
     df = df.drop(columns=['LX', 'BX', 'AX', 'BX.1', 'AX.1', 'LX.1', 'Theo Price', 'Theo Price.1'])
-    df_c = df.iloc[:, 0:22]
-    df_p = df.iloc[:, 20:]
+    df_c = df.iloc[:, 0:23]
+    df_p = df.iloc[:, 21:]
     df_c.to_csv(output_path[:-4] + "_C_" + output_path[-4:])
     df_p.to_csv(output_path[:-4] + "_P_" + output_path[-4:])
     return df_c, df_p
@@ -54,6 +57,7 @@ def remove_unwanted(data):
             data[column] = pd.to_numeric(data[column])
     data = data[data['Volume'] > 0]
     data = data[data['Intrinsic'] == 0]
+    data = data[data['BID'] >= 0.5]
     data = data.reset_index(drop=True)
     return data
 
@@ -93,30 +97,43 @@ def month_name2int(month_name):
     return dic[month_name]
 
 
-def add_target(data, symbol, option_type):
+def add_target(data, symbol, option_type, action):
     api = TdApi()
     history_price = api.request_price_history(symbol=symbol, periodType='year', period=2, frequencyType='daily', frequency=1)
     index = 0
-    data['expire_price'] = ""
+    # data['expire_price'] = ""
     data["target"] = ""
     for exp in data["Exp"]:
-        if option_type == 'C':
+        if option_type == 'C' and action == 'SELL':
+            if history_price.loc[exp2str(exp), "high"] >= data.loc[index, "Strike"] + data.loc[index, "LAST"]:
+                data.loc[index, "target"] = 0
+            else:
+                data.loc[index, "target"] = 1
+            # data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "high"]
+        elif option_type == 'C' and action == 'BUY':
             if history_price.loc[exp2str(exp), "high"] >= data.loc[index, "Strike"] + data.loc[index, "LAST"]:
                 data.loc[index, "target"] = 1
             else:
                 data.loc[index, "target"] = 0
-            data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "high"]
-        elif option_type == 'P':
+            # data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "high"]
+        elif option_type == 'P' and action == 'SELL':
+            if history_price.loc[exp2str(exp), "low"] <= data.loc[index, "Strike"] - data.loc[index, "LAST"]:
+                data.loc[index, "target"] = 0
+            else:
+                data.loc[index, "target"] = 1
+            # data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "low"]
+        elif option_type == 'P' and action == 'BUY':
             if history_price.loc[exp2str(exp), "low"] <= data.loc[index, "Strike"] - data.loc[index, "LAST"]:
                 data.loc[index, "target"] = 1
             else:
                 data.loc[index, "target"] = 0
-            data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "low"]
+            # data.loc[index, "expire_price"] = history_price.loc[exp2str(exp), "low"]
+
         index = index + 1
     return data.drop('Exp', axis='columns')
 
 
-def start_clean(data_path, symbol, year, month):
+def start_clean(data_path, symbol, year, month, action):
     df_c, df_p = clean_raw_csv(data_path, symbol, year, month)
     clean_df = []
     option_type = ['C', 'P']
@@ -124,6 +141,6 @@ def start_clean(data_path, symbol, year, month):
     for df in [df_c, df_p]:
         df = remove_unwanted(df)
         df = add_expire_days(df, year, month)
-        clean_df.append(add_target(df, symbol, option_type[n]))
+        clean_df.append(add_target(df, symbol, option_type[n], action))
         n = n + 1
     return clean_df
