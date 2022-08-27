@@ -14,6 +14,7 @@ from tqdm import tqdm
 import src.helpers.option_helpers
 from src.option_objects import option_chain_obj, date_chain_obj, single_option_obj
 from src.process import tda_api
+from src.pre_and_post import global_vars
 
 
 class DataRequest:
@@ -24,16 +25,8 @@ class DataRequest:
 
     def request_all_data(self):
         my_logger = logging.getLogger(__name__)
-        option_column_names = """underlying_symbol CHAR(10), underlying_price FLOAT, putCall CHAR(5), 
-            symbol CHAR(20), description VARCHAR(50), exchangeName CHAR(10), bid FLOAT, ask FLOAT, last FLOAT, mark FLOAT, 
-            bidSize INT, askSize INT, bidAskSize CHAR(20), lastSize INT, highPrice FLOAT, lowPrice FLOAT, openPrice FLOAT, 
-            closePrice FLOAT, totalVolume INT, tradeTimeInLong DATE, quoteTimeInLong DATE, netChange FLOAT, 
-            volatility FLOAT, delta FLOAT, gamma FLOAT, theta FLOAT, vega FLOAT, rho FLOAT, openInterest INT, 
-            timeValue FLOAT, theoreticalOptionValue FLOAT, theoreticalVolatility FLOAT, strikePrice FLOAT, 
-            expirationDate DATE, daysToExpiration INT, expirationType CHAR(5), lastTradingDay DATE, multiplier FLOAT, 
-            percentChange FLOAT, markChange FLOAT, 
-            markPercentChange FLOAT, nonStandard CHAR(5), inTheMoney CHAR(5), mini CHAR(5), bidAskSpread FLOAT, 
-            probITM FLOAT"""
+        option_column_names = global_vars.DB_COL_NAMES
+
         api_requester = tda_api.TdApi()
         if self.real_data:
             my_logger.info('Request real data.....')

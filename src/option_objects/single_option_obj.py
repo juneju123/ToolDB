@@ -8,6 +8,7 @@
 """
 import numpy as np
 from scipy.stats import norm
+from src.pre_and_post import global_vars
 
 
 class SingleOption:
@@ -16,13 +17,7 @@ class SingleOption:
 
         :type option_info: tuple
         """
-        attrs = ['underlying_symbol', 'underlying_price', 'putCall', 'symbol', 'description', 'exchangeName', 'bid',
-                 'ask', 'last', 'mark', 'bidSize', 'askSize', 'bidAskSize', 'lastSize', 'highPrice', 'lowPrice',
-                 'openPrice', 'closePrice', 'totalVolume', 'tradeTimeInLong', 'quoteTimeInLong', 'netChange',
-                 'volatility', 'delta', 'gamma', 'theta', 'vega', 'rho', 'openInterest', 'timeValue',
-                 'theoreticalOptionValue', 'theoreticalVolatility', 'strikePrice', 'expirationDate',
-                 'daysToExpiration', 'expirationType', 'lastTradingDay', 'multiplier', 'percentChange', 'markChange',
-                 'markPercentChange', 'nonStandard', 'inTheMoney', 'mini', 'bidAskSpread', 'probITM']
+        attrs = global_vars.OPTION_ATT_NAMES
 
         for attr in attrs:
             setattr(self, attr, option_info[attrs.index(attr)])

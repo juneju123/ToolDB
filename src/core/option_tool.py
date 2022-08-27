@@ -150,7 +150,7 @@ class OptionTool:
                                                                      'bullish_put', self.max_loss,
                                                                      self.min_profit, self.min_expectation,
                                                                      self.prob_of_max_profit,
-                                                                     self.max_strikes_wide)
+                                                                     self.max_strikes_wide, self.log)
             bullish_put = bullish_spread_screener.spread_screen()
             results_files_list = [bullish_put]
         elif self.spread_strategy == 'bearish':
@@ -165,7 +165,7 @@ class OptionTool:
                                                                      'bearish_call', self.max_loss,
                                                                      self.min_profit, self.min_expectation,
                                                                      self.prob_of_max_profit,
-                                                                     self.max_strikes_wide)
+                                                                     self.max_strikes_wide, self.log)
             bearish_call = bearish_spread_screener.vertical_screen_launcher()
 
             results_files_list = [bearish_call]
